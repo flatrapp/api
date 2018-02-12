@@ -338,6 +338,13 @@ types: !include ./types.raml
                   "message": "User does not exist or password is wrong."
                 }
               }
+            user_disabled: |
+              {
+                "error": {
+                  "code": "user_disabled",
+                  "message": "This user is disabled and has to be enabled before being able to log in."
+                }
+              }
 
 /users:
   get:
@@ -411,7 +418,7 @@ types: !include ./types.raml
         body:
           type: Error
           examples:
-            not_invited: |
+            not_invite: |
               {
                 "error": {
                   "code": "not_invited",
