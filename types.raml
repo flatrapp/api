@@ -1,0 +1,126 @@
+#%RAML 1.0
+User:
+  type: object
+  properties:
+    id: integer
+    email: string
+    firstName: string
+    lastName: string
+    emailVerified: boolean
+    disabled: boolean
+    absent: boolean
+
+EmailRegistration:
+  type: object
+  properties:
+    email: string
+    firstName: string
+    lastName: string
+    password: string
+    absent: boolean
+
+InvitationRegistration:
+  type: object
+  properties:
+    firstName: string
+    lastName: string
+    password: string
+    invitationCode:
+      type: string
+      minLength: 16
+      maxLength: 16
+    absent: boolean
+
+LoginCredentials:
+  type: object
+  properties:
+    email: string
+    password: string
+
+TokenResponse:
+  type: object
+  properties:
+    token: string
+    tokenId: string
+    validFor:
+      type: integer
+      description: |
+        Validity duration in seconds (excluding server-side grace period)
+
+Error:
+  type: object
+  properties:
+    error:
+      type: object
+      properties:
+        code: string
+        message: string
+
+Turn:
+  type: object
+  properties:
+    userId: integer
+    startDate:
+      type: datetime
+      format: rfc3339
+
+RequestTask:
+  type: object
+  properties:
+    title: string
+    description: string
+    frequency:
+      type: integer
+      description: |
+        Number of days between two executions of this task
+    completionTime:
+      type: integer
+      description: |
+        Time to be allowed for the task to be completed in hours
+    users:
+      type: integer[]
+      description: |
+        All users that will have to complete this task at one point or another
+
+Task:
+  type: object
+  properties:
+    id: integer
+    title: string
+    description: string
+    frequency:
+      type: integer
+      description: |
+        Number of days between two executions of this task
+    completionTime:
+      type: integer
+      description: |
+        Time to be allowed for the task to be completed in hours
+    users:
+      type: integer[]
+      description: |
+        All users that will have to complete this task at one point or another
+    currentTurn:
+      type: Turn | nil
+    upcomingTurns:
+      type: Turn[]
+
+Info:
+  type: object
+  properties:
+    version:
+      type: string
+      example: "v0.1"
+    currentTime:
+      type: string
+      example: "2018-02-12T15:41:42.799328781Z"
+      description: Current time of the server
+    name:
+      type: string
+      example: "core"
+
+Invitation:
+  type: object
+  properties:
+    id: integer
+    email: string
