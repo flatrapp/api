@@ -10,25 +10,27 @@ traits:
       400:
         body:
           type: Error
-          example: |
-            {
-              "error": {
-                "code": "bad_request",
-                "message": "Bad request"
+          examples:
+            bad_request: |
+              {
+                "error": {
+                  "code": "bad_request",
+                  "message": "Bad request"
+                }
               }
-            }
   findable:
     responses:
       404:
         body:
           type: Error
-          example: |
-            {
-              "error": {
-                "code": "not_found",
-                "message": "The resource you requested could not be found"
+          examples:
+            not_found: |
+              {
+                "error": {
+                  "code": "not_found",
+                  "message": "The resource you requested could not be found."
+                }
               }
-            }
   restricted:
     headers:
       Authorization:
@@ -39,13 +41,14 @@ traits:
       401:
         body:
           type: Error
-          example: |
-            {
-              "error": {
-                "code": "unauthorized",
-                "message": "You are not authorized to access this resource."
+          examples:
+            unauthorized: |
+              {
+                "error": {
+                  "code": "unauthorized",
+                  "message": "You are not authorized to access this resource."
+                }
               }
-            }
 
 types: !include ./types.raml
 
@@ -76,18 +79,8 @@ types: !include ./types.raml
                 "email": "landlord@example.com"
               }
             ]
-      401:
-        body:
-          type: Error
-          example: |
-            {
-              "error": {
-                "code": "unauthorized",
-                "message": "You are not authorized to access this resource"
-              }
-            }
   post:
-    is: [ restricted ]
+    is: [ restricted, fallible ]
     description: |
       Invite a person via email address. An email with invite code is sent to them
     body:
@@ -105,60 +98,30 @@ types: !include ./types.raml
             description: URL of the newly created Invitation
         body:
           type: Invitation
-      400:
+      409:
         body:
           type: Error
-          example: |
-            {
-              "error": {
-                "code": "bad_request",
-                "message": "Bad request"
+          examples:
+            invitation_email_exists: |
+              {
+                "error": {
+                  "code": "invitation_email_exists",
+                  "message": "An invitation with this email address already exists."
+                }
               }
-            }
-      401:
-        body:
-          type: Error
-          example: |
-            {
-              "error": {
-                "code": "unauthorized",
-                "message": "You are not authorized to access this resource"
-              }
-            }
   /{invitationId}:
     uriParameters:
       invitationId:
         type: integer
     get:
-      is: [ restricted ]
+      is: [ restricted, findable ]
       description: Get information about a specific invitation
       responses:
         200:
           body:
             type: Invitation
-        401:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "unauthorized",
-                  "message": "You are not authorized to access this resource"
-                }
-              }
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
-
     patch:
-      is: [ restricted ]
+      is: [ restricted, findable, fallible ]
       description: Resend invitation email
       body:
         example: {}
@@ -166,52 +129,12 @@ types: !include ./types.raml
         200:
           body:
             type: Invitation
-        401:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "unauthorized",
-                  "message": "You are not authorized to access this resource"
-                }
-              }
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
     delete:
-      is: [ restricted ]
+      is: [ restricted, findable ]
       description: Delete/Invalidate this invitation
       responses:
         204:
           description: Invitation was successfully deleted
-        401:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "unauthorized",
-                  "message": "You are not authorized to access this resource"
-                }
-              }
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
 
 /tasks:
   get:
@@ -246,7 +169,7 @@ types: !include ./types.raml
               }
             ]
   post:
-    is: [ restricted ]
+    is: [ restricted, fallible ]
     description: |
       Add a new task
     body:
@@ -289,22 +212,12 @@ types: !include ./types.raml
                 }
               ]
             }
-      400:
-        body:
-          type: Error
-          example: |
-            {
-              "error": {
-                "code": "bad_request",
-                "message": "Bad request"
-              }
-            }
   /{taskId}:
     uriParameters:
       taskId:
         type: integer
     get:
-      is: [ restricted ]
+      is: [ restricted, findable ]
       description: |
         Get detailed information about a task
       responses:
@@ -332,38 +245,18 @@ types: !include ./types.raml
                   }
                 ]
               }
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
     delete:
-      is: [ restricted ]
+      is: [ restricted, findable ]
       description: |
         Delete a task
       responses:
         204:
           description: |
             Task was successfully deleted
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
     put:
-      is: [ restricted ]
+      is: [ restricted, findable, fallible ]
       description: |
-        Update a task and return the same one
+        Replace a task and return the same one
       body:
         type: RequestTask
         example: |
@@ -398,36 +291,17 @@ types: !include ./types.raml
                   }
                 ]
               }
-        404:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "not_found",
-                  "message": "The resource you requested could not be found"
-                }
-              }
     /finish:
       post:
-        is: [ restricted ]
-        description: Finish the currently active turn
+        is: [ restricted, findable ]
+        description: Finish the currently active turn of this task
         responses:
           204:
             description: Task was successfully finished
-          404:
-            body:
-              type: Error
-              example: |
-                {
-                  "error": {
-                    "code": "not_found",
-                    "message": "The resource you requested could not be found"
-                  }
-                }
 
 /auth:
   post:
+    is: [ fallible ]
     description: Authenticate yourself
     body:
       type: LoginCredentials
@@ -461,7 +335,7 @@ types: !include ./types.raml
               {
                 "error": {
                   "code": "credentials_wrong",
-                  "message": "User does not exist or password is wrong"
+                  "message": "User does not exist or password is wrong."
                 }
               }
 
@@ -486,6 +360,7 @@ types: !include ./types.raml
               }
             ]
   post:
+    is: [ fallible ]
     description: Register a new user
     body:
       type: InvitationRegistration | EmailRegistration
@@ -513,13 +388,14 @@ types: !include ./types.raml
       409:
         body:
           type: Error
-          example: |
-            {
-              "error": {
-                "code": "email_exists",
-                "message": "A user with this email address already exists."
+          examples:
+            email_exists: |
+              {
+                "error": {
+                  "code": "email_exists",
+                  "message": "A user with this email address already exists."
+                }
               }
-            }
       403:
         body:
           type: Error
@@ -543,7 +419,7 @@ types: !include ./types.raml
                 }
               }
   /{userId}:
-    is: [ restricted ]
+    is: [ restricted, findable ]
     get:
       description: |
         Get the user with this Id
@@ -551,53 +427,13 @@ types: !include ./types.raml
           200:
             body:
               type: User
-          404:
-            body:
-              type: Error
-              example: |
-                {
-                  "error": {
-                    "code": "not_found",
-                    "message": "The resource you requested could not be found"
-                  }
-                }
-          401:
-            body:
-              type: Error
-              example: |
-                {
-                  "error": {
-                    "code": "unauthorized",
-                    "message": "You are not authorized to query this information"
-                  }
-                }
     delete:
-      is: [ restricted ]
+      is: [ restricted, findable ]
       description: |
         Delete the user with this id
         responses:
           204:
             description: User was successfully deleted
-          404:
-            body:
-              type: Error
-              example: |
-                {
-                  "error": {
-                    "code": "not_found",
-                    "message": "The resource you requested could not be found"
-                  }
-                }
-          401:
-            body:
-              type: Error
-              example: |
-                {
-                  "error": {
-                    "code": "unauthorized",
-                    "message": "You are not authorized to query this information"
-                  }
-                }
   /current:
     get:
       is: [ restricted ]
@@ -607,13 +443,3 @@ types: !include ./types.raml
         200:
           body:
             type: User
-        401:
-          body:
-            type: Error
-            example: |
-              {
-                "error": {
-                  "code": "unauthorized",
-                  "message": "You are not authorized to query this information"
-                }
-              }
