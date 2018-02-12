@@ -24,6 +24,5 @@ deploy:
   keep-history: true
   email: flatrbot@is.currently.online
   name: flatrbot
-  target-branch: travis-deployed
   on:
     branch: master
