@@ -13,7 +13,7 @@ script:
   - "raml2html api.raml > out/theme-default.html"
   - "raml2html --theme raml2html-material-theme api.raml > out/theme-material.html"
   - "raml2html --theme raml2html-markdown-theme api.raml > out/README.md"
-
+  - "ln -s ./out/theme-material.html ./out/index.html"
 
 deploy:
   provider: pages
@@ -24,5 +24,6 @@ deploy:
   keep-history: true
   email: flatrbot@is.currently.online
   name: flatrbot
+  target-branch: travis-deployed
   on:
     branch: master
