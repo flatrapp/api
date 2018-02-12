@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - "node"
+
+install:
+  - "npm install -g raml-cop raml2html raml2html-material-theme raml2html-markdown-theme"
+
+before_script:
+  - "mkdir out"
+    
+script:
+  - "raml-cop api.raml"
+  - "raml2html api.raml > out/theme-default.html"
+  - "raml2html --theme raml2html-material-theme api.raml > out/theme-material.html"
+  - "raml2html --theme raml2html-markdown-theme api.raml > out/README.md"
+
+
+deploy:
+  provider: pages
+  repo: "flatrapp/api"
+  local-dir: "./out"
+  skip-cleanup: true
+  github-token: $GHPAGES_ACCESS_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  keep-history: true
+  email: flatrbot@is.currently.online
+  name: flatrbot
+  on:
+    branch: master
