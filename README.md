@@ -1,4 +1,4 @@
-# flatr API documentation version v0.2
+# flatr API documentation version v0.2.1
 
 ---
 
@@ -57,15 +57,8 @@
 ### /users/{userId}
 
 * **get**: Get the user with this Id
-responses:
-  200:
-    body:
-      type: User
 
 * **delete**: Delete the user with this id
-responses:
-  204:
-    description: User was successfully deleted
 
 ### /users/current
 
