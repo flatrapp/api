@@ -35,11 +35,11 @@
 
 * **delete**: Delete a task
 
-* **put**: Update a task and return the same one
+* **put**: Replace a task and return the same one
 
 ### /tasks/{taskId}/finish
 
-* **post**: Finish the currently active turn
+* **post**: Finish the currently active turn of this task
 
 ## /auth
 
@@ -61,51 +61,11 @@ responses:
   200:
     body:
       type: User
-  404:
-    body:
-      type: Error
-      example: |
-        {
-          "error": {
-            "code": "not_found",
-            "message": "The resource you requested could not be found"
-          }
-        }
-  401:
-    body:
-      type: Error
-      example: |
-        {
-          "error": {
-            "code": "unauthorized",
-            "message": "You are not authorized to query this information"
-          }
-        }
 
 * **delete**: Delete the user with this id
 responses:
   204:
     description: User was successfully deleted
-  404:
-    body:
-      type: Error
-      example: |
-        {
-          "error": {
-            "code": "not_found",
-            "message": "The resource you requested could not be found"
-          }
-        }
-  401:
-    body:
-      type: Error
-      example: |
-        {
-          "error": {
-            "code": "unauthorized",
-            "message": "You are not authorized to query this information"
-          }
-        }
 
 ### /users/current
 
