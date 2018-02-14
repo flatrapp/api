@@ -1,4 +1,4 @@
-# flatr API documentation version v0.1
+# flatr API documentation version v0.2
 
 ---
 
