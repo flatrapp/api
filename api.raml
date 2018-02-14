@@ -1,6 +1,6 @@
 #%RAML 1.0
 title: flatr
-version: v0.2
+version: v0.2.1
 mediaType: application/json
 protocols: [ HTTP ]
 
@@ -430,17 +430,17 @@ types: !include ./types.raml
     get:
       description: |
         Get the user with this Id
-        responses:
-          200:
-            body:
-              type: User
+      responses:
+        200:
+          body:
+            type: User
     delete:
       is: [ restricted, findable ]
       description: |
         Delete the user with this id
-        responses:
-          204:
-            description: User was successfully deleted
+      responses:
+        204:
+          description: User was successfully deleted
   /current:
     get:
       is: [ restricted ]
