@@ -426,8 +426,8 @@ types: !include ./types.raml
                 }
               }
   /{userId}:
-    is: [ restricted, findable ]
     get:
+      is: [ restricted, findable ]
       description: |
         Get the user with this Id
       responses:
@@ -441,6 +441,31 @@ types: !include ./types.raml
       responses:
         204:
           description: User was successfully deleted
+  /verify:
+    post:
+      is: [ fallible ]
+      description: |
+        Verify the email of a user by providing the code
+        sent to him in an email.
+      body:
+        type: object
+        properties:
+          code: string
+      responses:
+        200:
+          body:
+            type: User
+        403:
+          body:
+            type: Error
+            examples:
+              verification_code_invalid: |
+                {
+                  "error": {
+                    "code": "verification_code_invalid",
+                    "message": "Your email address could not be verified with this code."
+                  }
+                }
   /current:
     get:
       is: [ restricted ]
