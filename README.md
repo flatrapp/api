@@ -60,6 +60,11 @@
 
 * **delete**: Delete the user with this id
 
+### /users/verify
+
+* **post**: Verify the email of a user by providing the code
+sent to him in an email.
+
 ### /users/current
 
 * **get**: Get the currently logged in user
