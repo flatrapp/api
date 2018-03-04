@@ -1,11 +1,20 @@
 #%RAML 1.0
+Email:
+  type: string
+  minLength: 1
+  pattern: ^.+@.+\..+$
+
 User:
   type: object
   properties:
     id: integer
-    email: string
-    firstName: string
-    lastName: string
+    email: Email
+    firstName:
+      type: string
+      minLength: 1
+    lastName:
+      type: string
+      minLength: 1
     emailVerified: boolean
     disabled: boolean
     absent: boolean
@@ -13,18 +22,30 @@ User:
 EmailRegistration:
   type: object
   properties:
-    email: string
-    firstName: string
-    lastName: string
-    password: string
+    email: Email
+    firstName:
+      type: string
+      minLength: 1
+    lastName:
+      type: string
+      minLength: 1
+    password:
+      type: string
+      minLength: 1
     absent: boolean
 
 InvitationRegistration:
   type: object
   properties:
-    firstName: string
-    lastName: string
-    password: string
+    firstName:
+      type: string
+      minLength: 1
+    lastName:
+      type: string
+      minLength: 1
+    password:
+      type: string
+      minLength: 1
     invitationCode:
       type: string
       minLength: 16
@@ -34,16 +55,27 @@ InvitationRegistration:
 LoginCredentials:
   type: object
   properties:
-    email: string
-    password: string
+    email: Email
+    password:
+      type: string
+      minLength: 1
 
 TokenResponse:
   type: object
   properties:
-    token: string
-    tokenId: string
+    token:
+      type: string
+      pattern: ^[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$
+      description: JWT token
+    tokenId:
+      type: string
+      pattern: ^[a-zA-Z0-9_-]+$
+      minLength: 20
+      maxLength: 20
+      description: JWT ID (jti)
     validFor:
       type: integer
+      minimum: 1
       description: |
         Validity duration in seconds (excluding server-side grace period)
 
@@ -53,7 +85,9 @@ Error:
     error:
       type: object
       properties:
-        code: string
+        code:
+          type: string
+          minLength: 1
         message: string
 
 Turn:
@@ -67,18 +101,25 @@ Turn:
 RequestTask:
   type: object
   properties:
-    title: string
-    description: string
+    title:
+      type: string
+      minLength: 1
+    description:
+      type: string
+      minLength: 1
     frequency:
       type: integer
+      minimum: 1
       description: |
         Number of days between two executions of this task
     completionTime:
       type: integer
+      minimum: 1
       description: |
         Time to be allowed for the task to be completed in hours
     users:
       type: integer[]
+      minItems: 1
       description: |
         All users that will have to complete this task at one point or another
 
@@ -86,20 +127,27 @@ Task:
   type: object
   properties:
     id: integer
-    title: string
-    description: string
+    title:
+      type: string
+      minLength: 1
+    description:
+      type: string
+      minLength: 1
     frequency:
       type: integer
+      minimum: 1
       description: |
         Number of days between two executions of this task
     completionTime:
       type: integer
+      minimum: 1
       description: |
         Time to be allowed for the task to be completed in hours
     users:
       type: integer[]
+      minItems: 1
       description: |
-        All users that will have to complete this task at one point or another
+        All users that will have to complete this task at one point or another.
     currentTurn:
       type: Turn | nil
     upcomingTurns:
@@ -111,6 +159,8 @@ Info:
     version:
       type: string
       example: "v0.1"
+      pattern: ^v\d+(\.\d){1,2}$
+      description: Version of the server
     currentTime:
       type: string
       example: "2018-02-12T15:41:42.799328781Z"
@@ -118,9 +168,10 @@ Info:
     name:
       type: string
       example: "core"
+      description: Name of the implementation of the server
 
 Invitation:
   type: object
   properties:
     id: integer
-    email: string
+    email: Email

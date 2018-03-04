@@ -316,8 +316,8 @@ types: !include ./types.raml
           type: TokenResponse
           example: |
             {
-              "token": "$token",
-              "tokenId": "$tokenId",
+              "token": "header.payload.signature",
+              "tokenId": "_tokenId000000000000",
               "validFor": 3600
             }
       403:
